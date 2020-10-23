@@ -1,6 +1,6 @@
 import { getStyleRepository, FlatpickrTheme } from './styles/Themes';
 
-const themeUrlPrefix = 'https://npmcdn.com/flatpickr@4.6.5/dist/themes';
+const themeUrlPrefix = 'https://npmcdn.com/flatpickr@4.6.6/dist/themes';
 
 export default class StyleLoader {
   constructor(public theme: FlatpickrTheme) {
