@@ -1,8 +1,8 @@
 import { LitElement } from 'lit-element';
 import 'flatpickr';
-import { DateLimit, DateOption, Hook, Options, ParsedOptions } from 'flatpickr/dist/types/options';
+import { DateLimit, DateOption, Options, ParsedOptions } from 'flatpickr/dist/types/options';
 import { Locale } from 'flatpickr/dist/types/locale';
-import { Instance } from 'flatpickr/dist/types/instance';
+import { Instance as FlatpickrInstance } from 'flatpickr/dist/types/instance';
 export declare class LitFlatpickr extends LitElement {
   /**
    * Exactly the same as date format, but for the altInput field
@@ -169,47 +169,6 @@ export declare class LitFlatpickr extends LitElement {
    * */
   noCalendar: boolean;
   /**
-   * Function(s) to trigger on every date selection
-   * @prop
-   * @type Function
-   * */
-  onChange?: Hook;
-  /**
-   * Function(s) to trigger every time the calendar is closed
-   * @prop
-   * @type Function
-   * */
-  onClose?: Hook;
-  /**
-   * Function(s) to trigger every time the calendar is opened
-   * @prop
-   * @type Function
-   * */
-  /**
-   * Function(s) to trigger when the calendar is ready
-   * @prop
-   * @type Function
-   * */
-  onReady?: Hook;
-  /**
-   * Function(s) to trigger every time the calendar month is changed by the user or programmatically
-   * @prop
-   * @type Function
-   * */
-  onMonthChange?: Hook;
-  /**
-   * Function(s) to trigger every time the calendar year is changed by the user or programmatically
-   * @prop
-   * @type Function
-   * */
-  onYearChange?: Hook;
-  /**
-   * Function(s) to trigger when the input value is updated with a new date string
-   * @prop
-   * @type Function
-   * */
-  onValueUpdate?: Hook;
-  /**
    * Function that expects a date string and must return a Date object.
    *
    * Function format: (date: string, format: string) => string
@@ -267,7 +226,7 @@ export declare class LitFlatpickr extends LitElement {
    * @type { "light" | "dark" | "material_blue" | "material_red" | "material_green" | "material_orange" | "airbnb" | "confetti" }
    * */
   theme: string;
-  _instance?: Instance;
+  _instance?: FlatpickrInstance;
   _inputElement?: HTMLInputElement;
   _hasSlottedElement: boolean;
   static get styles(): import('lit-element').CSSResult;
@@ -278,7 +237,13 @@ export declare class LitFlatpickr extends LitElement {
   removeTextNodes(node: Node): boolean;
   init(): Promise<void>;
   getOptions(): Options;
-  _onOpenHandler(dates: Date[], currentDateString: string): void;
+  _dispatchHookAsEvent(
+    evtName: string,
+    selectedDates: Date[],
+    currentDateString: string,
+    instance: FlatpickrInstance,
+    data?: any
+  ): void;
   initializeComponent(): void;
   findInputField(): HTMLInputElement | null;
   /**

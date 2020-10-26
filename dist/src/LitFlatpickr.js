@@ -273,13 +273,15 @@ let LitFlatpickr = class LitFlatpickr extends LitElement {
             nextArrow: this.nextArrow,
             prevArrow: this.prevArrow,
             noCalendar: this.noCalendar,
-            onChange: this.onChange,
-            onClose: this.onClose,
-            onOpen: (dates, currentDateString) => this._onOpenHandler(dates, currentDateString),
-            onReady: this.onReady,
-            onMonthChange: this.onMonthChange,
-            onYearChange: this.onYearChange,
-            onValueUpdate: this.onValueUpdate,
+            /* eslint-disable @typescript-eslint/no-explicit-any */
+            onValueUpdate: (dates, currentDateString, instance, data) => this._dispatchHookAsEvent('onValueUpdate', dates, currentDateString, instance, data),
+            onChange: (dates, currentDateString, instance, data) => this._dispatchHookAsEvent('onChange', dates, currentDateString, instance, data),
+            onClose: (dates, currentDateString, instance, data) => this._dispatchHookAsEvent('onClose', dates, currentDateString, instance, data),
+            onOpen: (dates, currentDateString, instance, data) => this._dispatchHookAsEvent('onOpen', dates, currentDateString, instance, data),
+            onReady: (dates, currentDateString, instance, data) => this._dispatchHookAsEvent('onReady', dates, currentDateString, instance, data),
+            onMonthChange: (dates, currentDateString, instance, data) => this._dispatchHookAsEvent('onMonthChange', dates, currentDateString, instance, data),
+            onYearChange: (dates, currentDateString, instance, data) => this._dispatchHookAsEvent('onYearChange', dates, currentDateString, instance, data),
+            /* eslint-enable @typescript-eslint/no-explicit-any */
             parseDate: this.parseDateFn,
             position: this.position,
             shorthandCurrentMonth: this.shorthandCurrentMonth,
@@ -291,16 +293,20 @@ let LitFlatpickr = class LitFlatpickr extends LitElement {
             wrap: this.wrap,
         };
     }
-    _onOpenHandler(dates, currentDateString) {
-        const devt = new CustomEvent("on-open", {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    _dispatchHookAsEvent(evtName, selectedDates, currentDateString, instance, data) {
+        const evt = new CustomEvent(evtName, {
             detail: {
                 value: currentDateString,
                 detail: {
-                    dates: dates
-                }
-            }
+                    dates: selectedDates,
+                    currentDateString: currentDateString,
+                    instance: instance,
+                    data: data
+                },
+            },
         });
-        this.dispatchEvent(devt);
+        this.dispatchEvent(evt);
     }
     initializeComponent() {
         var _a;
@@ -554,24 +560,6 @@ __decorate([
 __decorate([
     property({ type: Boolean })
 ], LitFlatpickr.prototype, "noCalendar", void 0);
-__decorate([
-    property({ type: Object })
-], LitFlatpickr.prototype, "onChange", void 0);
-__decorate([
-    property({ type: Object })
-], LitFlatpickr.prototype, "onClose", void 0);
-__decorate([
-    property({ type: Object })
-], LitFlatpickr.prototype, "onReady", void 0);
-__decorate([
-    property({ type: Object })
-], LitFlatpickr.prototype, "onMonthChange", void 0);
-__decorate([
-    property({ type: Object })
-], LitFlatpickr.prototype, "onYearChange", void 0);
-__decorate([
-    property({ type: Object })
-], LitFlatpickr.prototype, "onValueUpdate", void 0);
 __decorate([
     property({ type: Object })
 ], LitFlatpickr.prototype, "parseDateFn", void 0);

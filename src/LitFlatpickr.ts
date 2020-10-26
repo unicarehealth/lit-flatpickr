@@ -2,9 +2,9 @@ import { html, LitElement, property, customElement, css } from 'lit-element';
 import 'flatpickr';
 import { FlatpickrTheme } from './styles/Themes';
 import StyleLoader from './StyleLoader';
-import { DateLimit, DateOption, Hook, Options, ParsedOptions } from 'flatpickr/dist/types/options';
+import { DateLimit, DateOption, Options, ParsedOptions } from 'flatpickr/dist/types/options';
 import { Locale } from 'flatpickr/dist/types/locale';
-import { Instance } from 'flatpickr/dist/types/instance';
+import { Instance as FlatpickrInstance } from 'flatpickr/dist/types/instance';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare const flatpickr: any;
@@ -222,62 +222,6 @@ export class LitFlatpickr extends LitElement {
   noCalendar = false;
 
   /**
-   * Function(s) to trigger on every date selection
-   * @prop
-   * @type Function
-   * */
-  @property({ type: Object })
-  onChange?: Hook;
-
-  /**
-   * Function(s) to trigger every time the calendar is closed
-   * @prop
-   * @type Function
-   * */
-  @property({ type: Object })
-  onClose?: Hook;
-
-  /**
-   * Function(s) to trigger every time the calendar is opened
-   * @prop
-   * @type Function
-   * */
-  //@property({ type: Object })
-  //onOpen?: Hook;
-
-  /**
-   * Function(s) to trigger when the calendar is ready
-   * @prop
-   * @type Function
-   * */
-  @property({ type: Object })
-  onReady?: Hook;
-
-  /**
-   * Function(s) to trigger every time the calendar month is changed by the user or programmatically
-   * @prop
-   * @type Function
-   * */
-  @property({ type: Object })
-  onMonthChange?: Hook;
-
-  /**
-   * Function(s) to trigger every time the calendar year is changed by the user or programmatically
-   * @prop
-   * @type Function
-   * */
-  @property({ type: Object })
-  onYearChange?: Hook;
-
-  /**
-   * Function(s) to trigger when the input value is updated with a new date string
-   * @prop
-   * @type Function
-   * */
-  @property({ type: Object })
-  onValueUpdate?: Hook;
-
-  /**
    * Function that expects a date string and must return a Date object.
    *
    * Function format: (date: string, format: string) => string
@@ -353,7 +297,7 @@ export class LitFlatpickr extends LitElement {
   @property({ type: String })
   theme = 'light';
 
-  _instance?: Instance;
+  _instance?: FlatpickrInstance;
   _inputElement?: HTMLInputElement;
 
   @property({ type: Boolean })
@@ -451,13 +395,22 @@ export class LitFlatpickr extends LitElement {
       nextArrow: this.nextArrow,
       prevArrow: this.prevArrow,
       noCalendar: this.noCalendar,
-      onChange: this.onChange,
-      onClose: this.onClose,
-      onOpen: (dates: Date[], currentDateString: string) => this._onOpenHandler(dates, currentDateString),
-      onReady: this.onReady,
-      onMonthChange: this.onMonthChange,
-      onYearChange: this.onYearChange,
-      onValueUpdate: this.onValueUpdate,
+      /* eslint-disable @typescript-eslint/no-explicit-any */
+      onValueUpdate: (dates: Date[], currentDateString: string, instance: FlatpickrInstance, data?: any) =>
+        this._dispatchHookAsEvent('onValueUpdate', dates, currentDateString, instance, data),
+      onChange: (dates: Date[], currentDateString: string, instance: FlatpickrInstance, data?: any) =>
+        this._dispatchHookAsEvent('onChange', dates, currentDateString, instance, data),
+      onClose: (dates: Date[], currentDateString: string, instance: FlatpickrInstance, data?: any) =>
+        this._dispatchHookAsEvent('onClose', dates, currentDateString, instance, data),
+      onOpen: (dates: Date[], currentDateString: string, instance: FlatpickrInstance, data?: any) =>
+        this._dispatchHookAsEvent('onOpen', dates, currentDateString, instance, data),
+      onReady: (dates: Date[], currentDateString: string, instance: FlatpickrInstance, data?: any) =>
+        this._dispatchHookAsEvent('onReady', dates, currentDateString, instance, data),
+      onMonthChange: (dates: Date[], currentDateString: string, instance: FlatpickrInstance, data?: any) =>
+        this._dispatchHookAsEvent('onMonthChange', dates, currentDateString, instance, data),
+      onYearChange: (dates: Date[], currentDateString: string, instance: FlatpickrInstance, data?: any) =>
+        this._dispatchHookAsEvent('onYearChange', dates, currentDateString, instance, data),
+      /* eslint-enable @typescript-eslint/no-explicit-any */
       parseDate: this.parseDateFn,
       position: this.position,
       shorthandCurrentMonth: this.shorthandCurrentMonth,
@@ -470,16 +423,27 @@ export class LitFlatpickr extends LitElement {
     };
   }
 
-  _onOpenHandler(dates: Date[], currentDateString: string): void {
-    const devt = new CustomEvent('on-open', {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  _dispatchHookAsEvent(
+    evtName: string,
+    selectedDates: Date[],
+    currentDateString: string,
+    instance: FlatpickrInstance,
+    data?: any
+  ): void {
+    const evt = new CustomEvent(evtName, {
       detail: {
         value: currentDateString,
         detail: {
-          dates: dates,
+          dates: selectedDates,
+          currentDateString: currentDateString,
+          instance: instance,
+          data: data,
         },
       },
     });
-    this.dispatchEvent(devt);
+
+    this.dispatchEvent(evt);
   }
 
   initializeComponent(): void {
