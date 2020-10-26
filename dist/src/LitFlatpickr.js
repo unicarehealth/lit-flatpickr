@@ -297,13 +297,10 @@ let LitFlatpickr = class LitFlatpickr extends LitElement {
     _dispatchHookAsEvent(evtName, selectedDates, currentDateString, instance, data) {
         const evt = new CustomEvent(evtName, {
             detail: {
-                value: currentDateString,
-                detail: {
-                    dates: selectedDates,
-                    currentDateString: currentDateString,
-                    instance: instance,
-                    data: data
-                },
+                selectedDates: selectedDates,
+                currentDateString: currentDateString,
+                instance: instance,
+                data: data,
             },
         });
         this.dispatchEvent(evt);

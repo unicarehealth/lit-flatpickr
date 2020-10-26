@@ -433,13 +433,10 @@ export class LitFlatpickr extends LitElement {
   ): void {
     const evt = new CustomEvent(evtName, {
       detail: {
-        value: currentDateString,
-        detail: {
-          dates: selectedDates,
-          currentDateString: currentDateString,
-          instance: instance,
-          data: data,
-        },
+        selectedDates: selectedDates,
+        currentDateString: currentDateString,
+        instance: instance,
+        data: data,
       },
     });
 
