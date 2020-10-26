@@ -504,7 +504,7 @@ __decorate([
     property({ type: String })
 ], LitFlatpickr.prototype, "dateFormat", void 0);
 __decorate([
-    property({ type: Object })
+    property({ type: String })
 ], LitFlatpickr.prototype, "defaultDate", void 0);
 __decorate([
     property({ type: Number })

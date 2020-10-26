@@ -76,7 +76,7 @@ export class LitFlatpickr extends LitElement {
    * @prop
    * @type {DateOption|DateOption[]}
    * */
-  @property({ type: Object })
+  @property({ type: String })
   defaultDate?: DateOption | DateOption[];
 
   /**
