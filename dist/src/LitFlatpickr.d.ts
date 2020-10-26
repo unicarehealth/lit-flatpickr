@@ -185,7 +185,6 @@ export declare class LitFlatpickr extends LitElement {
    * @prop
    * @type Function
    * */
-  onOpen?: Hook;
   /**
    * Function(s) to trigger when the calendar is ready
    * @prop
@@ -279,6 +278,7 @@ export declare class LitFlatpickr extends LitElement {
   removeTextNodes(node: Node): boolean;
   init(): Promise<void>;
   getOptions(): Options;
+  _onOpenHandler(dates: Date[], currentDateString: string): void;
   initializeComponent(): void;
   findInputField(): HTMLInputElement | null;
   /**

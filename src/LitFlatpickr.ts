@@ -242,8 +242,8 @@ export class LitFlatpickr extends LitElement {
    * @prop
    * @type Function
    * */
-  @property({ type: Object })
-  onOpen?: Hook;
+  //@property({ type: Object })
+  //onOpen?: Hook;
 
   /**
    * Function(s) to trigger when the calendar is ready
@@ -453,7 +453,7 @@ export class LitFlatpickr extends LitElement {
       noCalendar: this.noCalendar,
       onChange: this.onChange,
       onClose: this.onClose,
-      onOpen: this.onOpen,
+      onOpen: (dates: Date[], currentDateString: string) => this._onOpenHandler(dates, currentDateString),
       onReady: this.onReady,
       onMonthChange: this.onMonthChange,
       onYearChange: this.onYearChange,
@@ -468,6 +468,18 @@ export class LitFlatpickr extends LitElement {
       weekNumbers: this.weekNumbers,
       wrap: this.wrap,
     };
+  }
+
+  _onOpenHandler(dates: Date[], currentDateString: string): void {
+    const devt = new CustomEvent('on-open', {
+      detail: {
+        value: currentDateString,
+        detail: {
+          dates: dates,
+        },
+      },
+    });
+    this.dispatchEvent(devt);
   }
 
   initializeComponent(): void {

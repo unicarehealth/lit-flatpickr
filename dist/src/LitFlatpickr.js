@@ -275,7 +275,7 @@ let LitFlatpickr = class LitFlatpickr extends LitElement {
             noCalendar: this.noCalendar,
             onChange: this.onChange,
             onClose: this.onClose,
-            onOpen: this.onOpen,
+            onOpen: (dates, currentDateString) => this._onOpenHandler(dates, currentDateString),
             onReady: this.onReady,
             onMonthChange: this.onMonthChange,
             onYearChange: this.onYearChange,
@@ -290,6 +290,17 @@ let LitFlatpickr = class LitFlatpickr extends LitElement {
             weekNumbers: this.weekNumbers,
             wrap: this.wrap,
         };
+    }
+    _onOpenHandler(dates, currentDateString) {
+        const devt = new CustomEvent("on-open", {
+            detail: {
+                value: currentDateString,
+                detail: {
+                    dates: dates
+                }
+            }
+        });
+        this.dispatchEvent(devt);
     }
     initializeComponent() {
         var _a;
@@ -549,9 +560,6 @@ __decorate([
 __decorate([
     property({ type: Object })
 ], LitFlatpickr.prototype, "onClose", void 0);
-__decorate([
-    property({ type: Object })
-], LitFlatpickr.prototype, "onOpen", void 0);
 __decorate([
     property({ type: Object })
 ], LitFlatpickr.prototype, "onReady", void 0);
