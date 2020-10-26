@@ -225,17 +225,24 @@ export declare class LitFlatpickr extends LitElement {
    * @prop
    * @type { "light" | "dark" | "material_blue" | "material_red" | "material_green" | "material_orange" | "airbnb" | "confetti" }
    * */
-  theme: string;
-  _instance?: FlatpickrInstance;
-  _inputElement?: HTMLInputElement;
+  theme:
+    | 'light'
+    | 'dark'
+    | 'material_blue'
+    | 'material_red'
+    | 'material_green'
+    | 'material_orange'
+    | 'airbnb'
+    | 'confetti';
   _hasSlottedElement: boolean;
+  _styleInitialized: boolean;
+  _instance?: FlatpickrInstance;
   static get styles(): import('lit-element').CSSResult;
   firstUpdated(): void;
-  updated(): void;
+  updated(changedProperties: Map<string | number | symbol, unknown>): Promise<void>;
   checkForSlottedElement(): boolean;
   getSlottedElement(): Element | undefined;
   removeTextNodes(node: Node): boolean;
-  init(): Promise<void>;
   getOptions(): Options;
   _dispatchHookAsEvent(
     evtName: string,
@@ -244,7 +251,8 @@ export declare class LitFlatpickr extends LitElement {
     instance: FlatpickrInstance,
     data?: any
   ): void;
-  initializeComponent(): void;
+  initializeComponent(): Promise<void>;
+  /** If lit-flatpickr has a slotted element, it means that the user wants to use their custom input. */
   findInputField(): HTMLInputElement | null;
   /**
    * Traverse the shadow dom tree and search for input from it

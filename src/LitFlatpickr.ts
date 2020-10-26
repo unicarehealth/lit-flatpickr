@@ -1,4 +1,4 @@
-import { html, LitElement, property, customElement, css } from 'lit-element';
+import { html, LitElement, property, internalProperty, customElement, css } from 'lit-element';
 import 'flatpickr';
 import { FlatpickrTheme } from './styles/Themes';
 import StyleLoader from './StyleLoader';
@@ -145,7 +145,7 @@ export class LitFlatpickr extends LitElement {
    * @prop
    * @type Function
    * */
-  @property({ type: Object })
+  @property({ attribute: false })
   formatDateFn?: (date: Date, format: string, locale: Locale) => string;
 
   /**
@@ -295,13 +295,22 @@ export class LitFlatpickr extends LitElement {
    * @type { "light" | "dark" | "material_blue" | "material_red" | "material_green" | "material_orange" | "airbnb" | "confetti" }
    * */
   @property({ type: String })
-  theme = 'light';
+  theme:
+    | 'light'
+    | 'dark'
+    | 'material_blue'
+    | 'material_red'
+    | 'material_green'
+    | 'material_orange'
+    | 'airbnb'
+    | 'confetti' = 'light';
+
+  @internalProperty()
+  _hasSlottedElement = false;
+
+  _styleInitialized = false;
 
   _instance?: FlatpickrInstance;
-  _inputElement?: HTMLInputElement;
-
-  @property({ type: Boolean })
-  _hasSlottedElement = false;
 
   static get styles() {
     return css`
@@ -332,10 +341,24 @@ export class LitFlatpickr extends LitElement {
     this._hasSlottedElement = this.checkForSlottedElement();
   }
 
-  updated() {
-    // TODO: Might not need to init every time updated, but only
-    // when relevant stuff changes
-    this.init();
+  async updated(changedProperties: Map<string | number | symbol, unknown>): Promise<void> {
+    let refreshStyles = !this._styleInitialized; //Initialise styles at startup, then only if 'theme' property changes.
+    if (!refreshStyles) {
+      changedProperties.forEach((oldValue, propName) => {
+        if (propName === 'theme' && this.theme !== oldValue) {
+          refreshStyles = true;
+        }
+      });
+    }
+
+    if (refreshStyles) {
+      const styleLoader = new StyleLoader(this.theme as FlatpickrTheme);
+      await styleLoader.initStyles();
+      this._styleInitialized = true;
+    }
+
+    // TODO: Might not need to init every time updated, but only when relevant stuff changes
+    await this.initializeComponent();
   }
 
   checkForSlottedElement(): boolean {
@@ -343,7 +366,7 @@ export class LitFlatpickr extends LitElement {
     // We don't want to think that a whitespace / line break is a node
     const assignedNodes = slottedElem ? slottedElem.assignedNodes().filter(this.removeTextNodes) : [];
 
-    return slottedElem != null && assignedNodes && assignedNodes.length > 0;
+    return assignedNodes.length > 0;
   }
 
   getSlottedElement(): Element | undefined {
@@ -360,12 +383,6 @@ export class LitFlatpickr extends LitElement {
 
   removeTextNodes(node: Node): boolean {
     return node.nodeName !== '#text';
-  }
-
-  async init(): Promise<void> {
-    const styleLoader = new StyleLoader(this.theme as FlatpickrTheme);
-    await styleLoader.initStyles();
-    this.initializeComponent();
   }
 
   getOptions(): Options {
@@ -423,7 +440,7 @@ export class LitFlatpickr extends LitElement {
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   _dispatchHookAsEvent(
     evtName: string,
     selectedDates: Date[],
@@ -431,6 +448,8 @@ export class LitFlatpickr extends LitElement {
     instance: FlatpickrInstance,
     data?: any
   ): void {
+    /* eslint-enable @typescript-eslint/no-explicit-any */
+
     const evt = new CustomEvent(evtName, {
       detail: {
         selectedDates: selectedDates,
@@ -443,30 +462,29 @@ export class LitFlatpickr extends LitElement {
     this.dispatchEvent(evt);
   }
 
-  initializeComponent(): void {
+  async initializeComponent(): Promise<void> {
     if (this._instance) {
       if (Object.prototype.hasOwnProperty.call(this, 'destroy')) {
         this._instance.destroy();
       }
     }
 
-    let inputElement: HTMLInputElement | null;
-    if (this._hasSlottedElement) {
-      // If lit-flatpickr has a slotted element, it means that
-      // the user wants to use their custom input.
-      inputElement = this.findInputField();
-    } else {
-      inputElement = this.shadowRoot?.querySelector('input') as HTMLInputElement;
-    }
+    await this.updateComplete;
 
+    const inputElement = this.findInputField();
     if (inputElement) {
-      this._inputElement = inputElement as HTMLInputElement;
       this._instance = flatpickr(inputElement, this.getOptions());
     }
   }
 
+  /** If lit-flatpickr has a slotted element, it means that the user wants to use their custom input. */
   findInputField(): HTMLInputElement | null {
     let inputElement: HTMLInputElement | null = null;
+
+    if (!this._hasSlottedElement) {
+      return this.shadowRoot?.querySelector('input') as HTMLInputElement;
+    }
+
     // First we check if the slotted element is just light dom HTML
     inputElement = this.querySelector('input');
     if (inputElement) {
@@ -618,13 +636,13 @@ export class LitFlatpickr extends LitElement {
   }
 
   getValue(): string {
-    if (!this._inputElement) return '';
-    return this._inputElement.value;
+    if (!this._instance) return ''; //Or we could check/use findInputField() instead of _instance.input.
+    return this._instance.input.value;
   }
 
   render() {
     return html`
-      ${!this._hasSlottedElement ? html`<input class="lit-flatpickr flatpickr flatpickr-input" />` : html``}
+      ${this._hasSlottedElement ? html`` : html`<input class="lit-flatpickr flatpickr flatpickr-input" />`}
       <slot></slot>
     `;
   }

@@ -1,5 +1,5 @@
 import { __decorate } from "tslib";
-import { html, LitElement, property, customElement, css } from 'lit-element';
+import { html, LitElement, property, internalProperty, customElement, css } from 'lit-element';
 import 'flatpickr';
 import StyleLoader from './StyleLoader';
 let LitFlatpickr = class LitFlatpickr extends LitElement {
@@ -186,6 +186,7 @@ let LitFlatpickr = class LitFlatpickr extends LitElement {
          * */
         this.theme = 'light';
         this._hasSlottedElement = false;
+        this._styleInitialized = false;
     }
     static get styles() {
         return css `
@@ -214,17 +215,29 @@ let LitFlatpickr = class LitFlatpickr extends LitElement {
     firstUpdated() {
         this._hasSlottedElement = this.checkForSlottedElement();
     }
-    updated() {
-        // TODO: Might not need to init every time updated, but only
-        // when relevant stuff changes
-        this.init();
+    async updated(changedProperties) {
+        let refreshStyles = !this._styleInitialized; //Initialise styles at startup, then only if 'theme' property changes.
+        if (!refreshStyles) {
+            changedProperties.forEach((oldValue, propName) => {
+                if (propName === "theme" && this.theme !== oldValue) {
+                    refreshStyles = true;
+                }
+            });
+        }
+        if (refreshStyles) {
+            const styleLoader = new StyleLoader(this.theme);
+            await styleLoader.initStyles();
+            this._styleInitialized = true;
+        }
+        // TODO: Might not need to init every time updated, but only when relevant stuff changes
+        await this.initializeComponent();
     }
     checkForSlottedElement() {
         var _a;
         const slottedElem = (_a = this.shadowRoot) === null || _a === void 0 ? void 0 : _a.querySelector('slot');
         // We don't want to think that a whitespace / line break is a node
         const assignedNodes = slottedElem ? slottedElem.assignedNodes().filter(this.removeTextNodes) : [];
-        return slottedElem != null && assignedNodes && assignedNodes.length > 0;
+        return assignedNodes.length > 0;
     }
     getSlottedElement() {
         var _a;
@@ -240,11 +253,6 @@ let LitFlatpickr = class LitFlatpickr extends LitElement {
     }
     removeTextNodes(node) {
         return node.nodeName !== '#text';
-    }
-    async init() {
-        const styleLoader = new StyleLoader(this.theme);
-        await styleLoader.initStyles();
-        this.initializeComponent();
     }
     getOptions() {
         return {
@@ -293,8 +301,9 @@ let LitFlatpickr = class LitFlatpickr extends LitElement {
             wrap: this.wrap,
         };
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     _dispatchHookAsEvent(evtName, selectedDates, currentDateString, instance, data) {
+        /* eslint-enable @typescript-eslint/no-explicit-any */
         const evt = new CustomEvent(evtName, {
             detail: {
                 selectedDates: selectedDates,
@@ -305,29 +314,25 @@ let LitFlatpickr = class LitFlatpickr extends LitElement {
         });
         this.dispatchEvent(evt);
     }
-    initializeComponent() {
-        var _a;
+    async initializeComponent() {
         if (this._instance) {
             if (Object.prototype.hasOwnProperty.call(this, 'destroy')) {
                 this._instance.destroy();
             }
         }
-        let inputElement;
-        if (this._hasSlottedElement) {
-            // If lit-flatpickr has a slotted element, it means that
-            // the user wants to use their custom input.
-            inputElement = this.findInputField();
-        }
-        else {
-            inputElement = (_a = this.shadowRoot) === null || _a === void 0 ? void 0 : _a.querySelector('input');
-        }
+        await this.updateComplete;
+        const inputElement = this.findInputField();
         if (inputElement) {
-            this._inputElement = inputElement;
             this._instance = flatpickr(inputElement, this.getOptions());
         }
     }
+    /** If lit-flatpickr has a slotted element, it means that the user wants to use their custom input. */
     findInputField() {
+        var _a;
         let inputElement = null;
+        if (!this._hasSlottedElement) {
+            return (_a = this.shadowRoot) === null || _a === void 0 ? void 0 : _a.querySelector('input');
+        }
         // First we check if the slotted element is just light dom HTML
         inputElement = this.querySelector('input');
         if (inputElement) {
@@ -471,13 +476,13 @@ let LitFlatpickr = class LitFlatpickr extends LitElement {
         return this._instance.config;
     }
     getValue() {
-        if (!this._inputElement)
-            return '';
-        return this._inputElement.value;
+        if (!this._instance)
+            return ''; //Or we could check/use findInputField() instead of _instance.input.
+        return this._instance.input.value;
     }
     render() {
         return html `
-      ${!this._hasSlottedElement ? html `<input class="lit-flatpickr flatpickr flatpickr-input" />` : html ``}
+      ${this._hasSlottedElement ? html `` : html `<input class="lit-flatpickr flatpickr flatpickr-input">`}
       <slot></slot>
     `;
     }
@@ -528,7 +533,7 @@ __decorate([
     property({ type: Boolean })
 ], LitFlatpickr.prototype, "enableSeconds", void 0);
 __decorate([
-    property({ type: Object })
+    property({ attribute: false })
 ], LitFlatpickr.prototype, "formatDateFn", void 0);
 __decorate([
     property({ type: Number })
@@ -585,7 +590,7 @@ __decorate([
     property({ type: String })
 ], LitFlatpickr.prototype, "theme", void 0);
 __decorate([
-    property({ type: Boolean })
+    internalProperty()
 ], LitFlatpickr.prototype, "_hasSlottedElement", void 0);
 LitFlatpickr = __decorate([
     customElement('lit-flatpickr')
