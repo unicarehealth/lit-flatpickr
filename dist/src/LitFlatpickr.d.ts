@@ -308,7 +308,7 @@ export declare class LitFlatpickr extends LitElement {
         },
     value?: any
   ): void;
-  setDate(date: DateOption | DateOption[], triggerChange: boolean, dateStrFormat: string): void;
+  setDate(date: DateOption | DateOption[], triggerChange?: boolean, dateStrFormat?: string): void;
   toggle(): void;
   getSelectedDates(): Array<Date>;
   getCurrentYear(): number;

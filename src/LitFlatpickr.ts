@@ -1,11 +1,12 @@
-import { html, LitElement, property, customElement, css, PropertyValues } from 'lit-element';
+import { html, LitElement, property, customElement, css } from 'lit-element';
 import 'flatpickr';
 import { FlatpickrTheme } from './styles/Themes';
 import StyleLoader from './StyleLoader';
-import { DateLimit, DateOption, Hook, Options, BaseOptions, ParsedOptions } from 'flatpickr/dist/types/options';
+import { DateLimit, DateOption, Hook, Options, ParsedOptions } from 'flatpickr/dist/types/options';
 import { Locale } from 'flatpickr/dist/types/locale';
 import { Instance } from 'flatpickr/dist/types/instance';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare const flatpickr: any;
 
 @customElement('lit-flatpickr')
@@ -144,7 +145,7 @@ export class LitFlatpickr extends LitElement {
    * @prop
    * @type Function
    * */
-  @property({ type: Function })
+  @property({ type: Object })
   formatDateFn?: (date: Date, format: string, locale: Locale) => string;
 
   /**
@@ -225,7 +226,7 @@ export class LitFlatpickr extends LitElement {
    * @prop
    * @type Function
    * */
-  @property({ type: Function })
+  @property({ type: Object })
   onChange?: Hook;
 
   /**
@@ -233,7 +234,7 @@ export class LitFlatpickr extends LitElement {
    * @prop
    * @type Function
    * */
-  @property({ type: Function })
+  @property({ type: Object })
   onClose?: Hook;
 
   /**
@@ -241,7 +242,7 @@ export class LitFlatpickr extends LitElement {
    * @prop
    * @type Function
    * */
-  @property({ type: Function })
+  @property({ type: Object })
   onOpen?: Hook;
 
   /**
@@ -249,7 +250,7 @@ export class LitFlatpickr extends LitElement {
    * @prop
    * @type Function
    * */
-  @property({ type: Function })
+  @property({ type: Object })
   onReady?: Hook;
 
   /**
@@ -257,7 +258,7 @@ export class LitFlatpickr extends LitElement {
    * @prop
    * @type Function
    * */
-  @property({ type: Function })
+  @property({ type: Object })
   onMonthChange?: Hook;
 
   /**
@@ -265,7 +266,7 @@ export class LitFlatpickr extends LitElement {
    * @prop
    * @type Function
    * */
-  @property({ type: Function })
+  @property({ type: Object })
   onYearChange?: Hook;
 
   /**
@@ -273,7 +274,7 @@ export class LitFlatpickr extends LitElement {
    * @prop
    * @type Function
    * */
-  @property({ type: Function })
+  @property({ type: Object })
   onValueUpdate?: Hook;
 
   /**
@@ -284,7 +285,7 @@ export class LitFlatpickr extends LitElement {
    * @prop
    * @type Function
    **/
-  @property({ type: Function })
+  @property({ type: Object })
   parseDateFn?: (date: string, format: string) => Date;
 
   /**
@@ -347,7 +348,7 @@ export class LitFlatpickr extends LitElement {
   /**
    * The set theme of flatpickr.
    * @prop
-   * @type { "light" | "dark" | "material_blue" | "material_red" | "material_green" | "material_orange" | "airbnb" | "confetti" }
+   * @type { "light" | "dark" | "material_blue" | "material_red" | "material_green" | "material_orange" | "airbnb" | "confetti" }
    * */
   @property({ type: String })
   theme = 'light';
@@ -601,15 +602,22 @@ export class LitFlatpickr extends LitElement {
       | {
           [k in keyof Options]?: Options[k];
         },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     value?: any
   ): void {
     if (!this._instance) return;
     this._instance.set(option, value);
   }
 
-  setDate(date: DateOption | DateOption[], triggerChange: boolean, dateStrFormat: string): void {
+  setDate(date: DateOption | DateOption[], triggerChange?: boolean, dateStrFormat?: string): void {
     if (!this._instance) return;
-    this._instance.setDate(date, triggerChange, dateStrFormat);
+    //Handle second and third parameters as optional:
+    if (dateStrFormat !== undefined) {
+      this._instance.setDate(date, triggerChange, dateStrFormat);
+    } else if (triggerChange !== undefined) {
+      this._instance.setDate(date, triggerChange);
+    }
+    this._instance.setDate(date);
   }
 
   toggle(): void {

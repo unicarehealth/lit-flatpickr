@@ -182,7 +182,7 @@ let LitFlatpickr = class LitFlatpickr extends LitElement {
         /**
          * The set theme of flatpickr.
          * @prop
-         * @type { "light" | "dark" | "material_blue" | "material_red" | "material_green" | "material_orange" | "airbnb" | "confetti" }
+         * @type { "light" | "dark" | "material_blue" | "material_red" | "material_green" | "material_orange" | "airbnb" | "confetti" }
          * */
         this.theme = 'light';
         this._hasSlottedElement = false;
@@ -413,7 +413,9 @@ let LitFlatpickr = class LitFlatpickr extends LitElement {
             return;
         this._instance.redraw();
     }
-    set(option, value) {
+    set(option, 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    value) {
         if (!this._instance)
             return;
         this._instance.set(option, value);
@@ -421,7 +423,14 @@ let LitFlatpickr = class LitFlatpickr extends LitElement {
     setDate(date, triggerChange, dateStrFormat) {
         if (!this._instance)
             return;
-        this._instance.setDate(date, triggerChange, dateStrFormat);
+        //Handle second and third parameters as optional:
+        if (dateStrFormat !== undefined) {
+            this._instance.setDate(date, triggerChange, dateStrFormat);
+        }
+        else if (triggerChange !== undefined) {
+            this._instance.setDate(date, triggerChange);
+        }
+        this._instance.setDate(date);
     }
     toggle() {
         if (!this._instance)
@@ -505,7 +514,7 @@ __decorate([
     property({ type: Boolean })
 ], LitFlatpickr.prototype, "enableSeconds", void 0);
 __decorate([
-    property({ type: Function })
+    property({ type: Object })
 ], LitFlatpickr.prototype, "formatDateFn", void 0);
 __decorate([
     property({ type: Number })
@@ -535,28 +544,28 @@ __decorate([
     property({ type: Boolean })
 ], LitFlatpickr.prototype, "noCalendar", void 0);
 __decorate([
-    property({ type: Function })
+    property({ type: Object })
 ], LitFlatpickr.prototype, "onChange", void 0);
 __decorate([
-    property({ type: Function })
+    property({ type: Object })
 ], LitFlatpickr.prototype, "onClose", void 0);
 __decorate([
-    property({ type: Function })
+    property({ type: Object })
 ], LitFlatpickr.prototype, "onOpen", void 0);
 __decorate([
-    property({ type: Function })
+    property({ type: Object })
 ], LitFlatpickr.prototype, "onReady", void 0);
 __decorate([
-    property({ type: Function })
+    property({ type: Object })
 ], LitFlatpickr.prototype, "onMonthChange", void 0);
 __decorate([
-    property({ type: Function })
+    property({ type: Object })
 ], LitFlatpickr.prototype, "onYearChange", void 0);
 __decorate([
-    property({ type: Function })
+    property({ type: Object })
 ], LitFlatpickr.prototype, "onValueUpdate", void 0);
 __decorate([
-    property({ type: Function })
+    property({ type: Object })
 ], LitFlatpickr.prototype, "parseDateFn", void 0);
 __decorate([
     property({ type: String })
