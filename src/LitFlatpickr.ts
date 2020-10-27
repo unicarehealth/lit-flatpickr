@@ -343,11 +343,19 @@ export class LitFlatpickr extends LitElement {
 
   async updated(changedProperties: Map<string | number | symbol, unknown>): Promise<void> {
     let refreshStyles = !this._styleInitialized; //Initialise styles at startup, then only if 'theme' property changes.
+    let refreshInstance = this._instance === undefined; //Initialise flatpickr instance at startup, then only if we can't set the changed option on it.
+
     if (!refreshStyles) {
       changedProperties.forEach((oldValue, propName) => {
-        if (propName === 'theme' && this.theme !== oldValue) {
+        if (!refreshStyles && propName === 'theme' && this.theme !== oldValue) {
           refreshStyles = true;
         }
+
+        if (!refreshInstance && propName === 'defaultDate' && this.defaultDate !== oldValue) {
+          this._instance?.set('defaultDate', this.defaultDate);
+          refreshInstance = false;
+        }
+        // TODO: Continue to handle changed properties using set() so not initialised every time updated.
       });
     }
 
@@ -357,8 +365,9 @@ export class LitFlatpickr extends LitElement {
       this._styleInitialized = true;
     }
 
-    // TODO: Might not need to init every time updated, but only when relevant stuff changes
-    await this.initializeComponent();
+    if (refreshInstance) {
+      await this.initializeComponent();
+    }
   }
 
   checkForSlottedElement(): boolean {
