@@ -450,14 +450,16 @@ let LitFlatpickr = class LitFlatpickr extends LitElement {
     setDate(date, triggerChange, dateStrFormat) {
         if (!this._instance)
             return;
-        //Handle second and third parameters as optional:
+        //Handle second and third parameters as optional - call setDate() ONCE only:
         if (dateStrFormat !== undefined) {
             this._instance.setDate(date, triggerChange, dateStrFormat);
         }
         else if (triggerChange !== undefined) {
             this._instance.setDate(date, triggerChange);
         }
-        this._instance.setDate(date);
+        else {
+            this._instance.setDate(date);
+        }
     }
     toggle() {
         if (!this._instance)

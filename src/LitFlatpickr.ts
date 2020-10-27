@@ -611,13 +611,14 @@ export class LitFlatpickr extends LitElement {
 
   setDate(date: DateOption | DateOption[], triggerChange?: boolean, dateStrFormat?: string): void {
     if (!this._instance) return;
-    //Handle second and third parameters as optional:
+    //Handle second and third parameters as optional - call setDate() ONCE only:
     if (dateStrFormat !== undefined) {
       this._instance.setDate(date, triggerChange, dateStrFormat);
     } else if (triggerChange !== undefined) {
       this._instance.setDate(date, triggerChange);
+    } else {
+      this._instance.setDate(date);
     }
-    this._instance.setDate(date);
   }
 
   toggle(): void {
