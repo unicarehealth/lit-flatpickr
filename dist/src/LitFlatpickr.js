@@ -323,10 +323,9 @@ let LitFlatpickr = class LitFlatpickr extends LitElement {
         this.dispatchEvent(evt);
     }
     async initializeComponent() {
-        if (this._instance) {
-            if (Object.prototype.hasOwnProperty.call(this, 'destroy')) {
-                this._instance.destroy();
-            }
+        var _a;
+        if (Object.prototype.hasOwnProperty.call(this, 'destroy')) {
+            (_a = this._instance) === null || _a === void 0 ? void 0 : _a.destroy();
         }
         await this.updateComplete;
         const inputElement = this.findInputField();
@@ -396,99 +395,75 @@ let LitFlatpickr = class LitFlatpickr extends LitElement {
         }
     }
     changeMonth(monthNum, isOffset = true) {
-        if (!this._instance)
-            return;
-        this._instance.changeMonth(monthNum, isOffset);
+        var _a;
+        (_a = this._instance) === null || _a === void 0 ? void 0 : _a.changeMonth(monthNum, isOffset);
     }
     clear() {
-        if (!this._instance)
-            return;
-        this._instance.clear();
+        var _a;
+        (_a = this._instance) === null || _a === void 0 ? void 0 : _a.clear();
     }
     close() {
-        if (!this._instance)
-            return;
-        this._instance.close();
+        var _a;
+        (_a = this._instance) === null || _a === void 0 ? void 0 : _a.close();
     }
     destroy() {
-        if (!this._instance)
-            return;
-        this._instance.destroy();
+        var _a;
+        (_a = this._instance) === null || _a === void 0 ? void 0 : _a.destroy();
     }
     formatDate(dateObj, formatStr) {
-        if (!this._instance)
-            return '';
-        return this._instance.formatDate(dateObj, formatStr);
+        var _a, _b;
+        return (_b = (_a = this._instance) === null || _a === void 0 ? void 0 : _a.formatDate(dateObj, formatStr)) !== null && _b !== void 0 ? _b : '';
     }
     jumpToDate(date, triggerChange) {
-        if (!this._instance)
-            return;
-        this._instance.jumpToDate(date, triggerChange);
+        var _a;
+        (_a = this._instance) === null || _a === void 0 ? void 0 : _a.jumpToDate(date, triggerChange);
     }
     open() {
-        if (!this._instance)
-            return;
-        this._instance.open();
+        var _a;
+        (_a = this._instance) === null || _a === void 0 ? void 0 : _a.open();
     }
     parseDate(dateStr, dateFormat) {
-        if (!this._instance)
-            return undefined;
-        return this._instance.parseDate(dateStr, dateFormat);
+        var _a;
+        return (_a = this._instance) === null || _a === void 0 ? void 0 : _a.parseDate(dateStr, dateFormat);
     }
     redraw() {
-        if (!this._instance)
-            return;
-        this._instance.redraw();
+        var _a;
+        (_a = this._instance) === null || _a === void 0 ? void 0 : _a.redraw();
     }
     set(option, 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     value) {
-        if (!this._instance)
-            return;
-        this._instance.set(option, value);
+        var _a;
+        (_a = this._instance) === null || _a === void 0 ? void 0 : _a.set(option, value);
     }
+    /** Second and third parameters are optional (as per flatpickr documentation). */
     setDate(date, triggerChange, dateStrFormat) {
-        if (!this._instance)
-            return;
-        //Handle second and third parameters as optional - call setDate() ONCE only:
-        if (dateStrFormat !== undefined) {
-            this._instance.setDate(date, triggerChange, dateStrFormat);
-        }
-        else if (triggerChange !== undefined) {
-            this._instance.setDate(date, triggerChange);
-        }
-        else {
-            this._instance.setDate(date);
-        }
+        var _a;
+        (_a = this._instance) === null || _a === void 0 ? void 0 : _a.setDate(date, triggerChange, dateStrFormat);
     }
     toggle() {
-        if (!this._instance)
-            return;
+        var _a;
+        (_a = this._instance) === null || _a === void 0 ? void 0 : _a.toggle();
     }
     getSelectedDates() {
-        if (!this._instance)
-            return [];
-        return this._instance.selectedDates;
+        var _a, _b;
+        return (_b = (_a = this._instance) === null || _a === void 0 ? void 0 : _a.selectedDates) !== null && _b !== void 0 ? _b : [];
     }
     getCurrentYear() {
-        if (!this._instance)
-            return -1;
-        return this._instance.currentYear;
+        var _a, _b;
+        return (_b = (_a = this._instance) === null || _a === void 0 ? void 0 : _a.currentYear) !== null && _b !== void 0 ? _b : -1;
     }
     getCurrentMonth() {
-        if (!this._instance)
-            return -1;
-        return this._instance.currentMonth;
+        var _a, _b;
+        return (_b = (_a = this._instance) === null || _a === void 0 ? void 0 : _a.currentMonth) !== null && _b !== void 0 ? _b : -1;
     }
     getConfig() {
-        if (!this._instance)
-            return {};
-        return this._instance.config;
+        var _a, _b;
+        return (_b = (_a = this._instance) === null || _a === void 0 ? void 0 : _a.config) !== null && _b !== void 0 ? _b : {};
     }
     getValue() {
-        if (!this._instance)
-            return ''; //Or we could check/use findInputField() instead of _instance.input.
-        return this._instance.input.value;
+        var _a, _b;
+        return (_b = (_a = this._instance) === null || _a === void 0 ? void 0 : _a.input.value) !== null && _b !== void 0 ? _b : ''; //Or we could check/use findInputField() instead of _instance.input.
     }
     render() {
         return html `

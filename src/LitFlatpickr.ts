@@ -472,10 +472,8 @@ export class LitFlatpickr extends LitElement {
   }
 
   async initializeComponent(): Promise<void> {
-    if (this._instance) {
-      if (Object.prototype.hasOwnProperty.call(this, 'destroy')) {
-        this._instance.destroy();
-      }
+    if (Object.prototype.hasOwnProperty.call(this, 'destroy')) {
+      this._instance?.destroy();
     }
 
     await this.updateComplete;
@@ -552,48 +550,39 @@ export class LitFlatpickr extends LitElement {
   }
 
   changeMonth(monthNum: number, isOffset = true): void {
-    if (!this._instance) return;
-    this._instance.changeMonth(monthNum, isOffset);
+    this._instance?.changeMonth(monthNum, isOffset);
   }
 
   clear(): void {
-    if (!this._instance) return;
-    this._instance.clear();
+    this._instance?.clear();
   }
 
   close(): void {
-    if (!this._instance) return;
-    this._instance.close();
+    this._instance?.close();
   }
 
   destroy(): void {
-    if (!this._instance) return;
-    this._instance.destroy();
+    this._instance?.destroy();
   }
 
   formatDate(dateObj: Date, formatStr: string): string {
-    if (!this._instance) return '';
-    return this._instance.formatDate(dateObj, formatStr);
+    return this._instance?.formatDate(dateObj, formatStr) ?? '';
   }
 
   jumpToDate(date: Date, triggerChange: boolean) {
-    if (!this._instance) return;
-    this._instance.jumpToDate(date, triggerChange);
+    this._instance?.jumpToDate(date, triggerChange);
   }
 
   open(): void {
-    if (!this._instance) return;
-    this._instance.open();
+    this._instance?.open();
   }
 
   parseDate(dateStr: string, dateFormat: string): Date | undefined {
-    if (!this._instance) return undefined;
-    return this._instance.parseDate(dateStr, dateFormat);
+    return this._instance?.parseDate(dateStr, dateFormat);
   }
 
   redraw(): void {
-    if (!this._instance) return;
-    this._instance.redraw();
+    this._instance?.redraw();
   }
 
   set(
@@ -605,49 +594,36 @@ export class LitFlatpickr extends LitElement {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     value?: any
   ): void {
-    if (!this._instance) return;
-    this._instance.set(option, value);
+    this._instance?.set(option, value);
   }
 
+  /** Second and third parameters are optional (as per flatpickr documentation). */
   setDate(date: DateOption | DateOption[], triggerChange?: boolean, dateStrFormat?: string): void {
-    if (!this._instance) return;
-    //Handle second and third parameters as optional - call setDate() ONCE only:
-    if (dateStrFormat !== undefined) {
-      this._instance.setDate(date, triggerChange, dateStrFormat);
-    } else if (triggerChange !== undefined) {
-      this._instance.setDate(date, triggerChange);
-    } else {
-      this._instance.setDate(date);
-    }
+    this._instance?.setDate(date, triggerChange, dateStrFormat);
   }
 
   toggle(): void {
-    if (!this._instance) return;
+    this._instance?.toggle();
   }
 
   getSelectedDates(): Array<Date> {
-    if (!this._instance) return [];
-    return this._instance.selectedDates;
+    return this._instance?.selectedDates ?? [];
   }
 
   getCurrentYear(): number {
-    if (!this._instance) return -1;
-    return this._instance.currentYear;
+    return this._instance?.currentYear ?? -1;
   }
 
   getCurrentMonth(): number {
-    if (!this._instance) return -1;
-    return this._instance.currentMonth;
+    return this._instance?.currentMonth ?? -1;
   }
 
   getConfig(): ParsedOptions {
-    if (!this._instance) return {} as ParsedOptions;
-    return this._instance.config;
+    return this._instance?.config ?? ({} as ParsedOptions);
   }
 
   getValue(): string {
-    if (!this._instance) return ''; //Or we could check/use findInputField() instead of _instance.input.
-    return this._instance.input.value;
+    return this._instance?.input.value ?? ''; //Or we could check/use findInputField() instead of _instance.input.
   }
 
   render() {

@@ -281,6 +281,7 @@ export declare class LitFlatpickr extends LitElement {
         },
     value?: any
   ): void;
+  /** Second and third parameters are optional (as per flatpickr documentation). */
   setDate(date: DateOption | DateOption[], triggerChange?: boolean, dateStrFormat?: string): void;
   toggle(): void;
   getSelectedDates(): Array<Date>;
