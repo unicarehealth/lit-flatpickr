@@ -1,4 +1,5 @@
-import { LitElement } from 'lit-element';
+import { LitElement, CSSResultArray } from 'lit-element';
+import { TemplateResult } from 'lit-html';
 import 'flatpickr';
 import { DateLimit, DateOption, Options, ParsedOptions } from 'flatpickr/dist/types/options';
 import { Locale } from 'flatpickr/dist/types/locale';
@@ -237,8 +238,8 @@ export declare class LitFlatpickr extends LitElement {
   _hasSlottedElement: boolean;
   _styleInitialized: boolean;
   _instance?: FlatpickrInstance;
-  static get styles(): import('lit-element').CSSResult;
-  firstUpdated(): void;
+  static get styles(): CSSResultArray;
+  firstUpdated(): Promise<void>;
   updated(changedProperties: Map<string | number | symbol, unknown>): Promise<void>;
   checkForSlottedElement(): boolean;
   getSlottedElement(): Element | undefined;
@@ -289,5 +290,5 @@ export declare class LitFlatpickr extends LitElement {
   getCurrentMonth(): number;
   getConfig(): ParsedOptions;
   getValue(): string;
-  render(): import('lit-element').TemplateResult;
+  render(): TemplateResult;
 }

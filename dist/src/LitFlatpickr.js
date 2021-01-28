@@ -189,30 +189,32 @@ let LitFlatpickr = class LitFlatpickr extends LitElement {
         this._styleInitialized = false;
     }
     static get styles() {
-        return css `
-      :host {
-        width: fit-content;
-        display: block;
-        cursor: text;
-        background: #fff;
-        color: #000;
-        overflow: hidden;
-      }
+        return [
+            css `
+        :host {
+          width: fit-content;
+          display: block;
+          cursor: text;
+          background: #fff;
+          color: #000;
+          overflow: hidden;
+        }
 
-      input {
-        width: 100%;
-        height: 100%;
-        font-size: inherit;
-        cursor: inherit;
-        background: inherit;
-        box-sizing: border-box;
-        outline: none;
-        color: inherit;
-        border: none;
-      }
-    `;
+        input {
+          width: 100%;
+          height: 100%;
+          font-size: inherit;
+          cursor: inherit;
+          background: inherit;
+          box-sizing: border-box;
+          outline: none;
+          color: inherit;
+          border: none;
+        }
+      `,
+        ];
     }
-    firstUpdated() {
+    async firstUpdated() {
         this._hasSlottedElement = this.checkForSlottedElement();
     }
     async updated(changedProperties) {
@@ -220,12 +222,11 @@ let LitFlatpickr = class LitFlatpickr extends LitElement {
         let refreshInstance = this._instance === undefined; //Initialise flatpickr instance at startup, then only if we can't set the changed option on it.
         if (!refreshStyles) {
             changedProperties.forEach((oldValue, propName) => {
-                var _a;
                 if (!refreshStyles && propName === 'theme' && this.theme !== oldValue) {
                     refreshStyles = true;
                 }
                 if (!refreshInstance && propName === 'defaultDate' && this.defaultDate !== oldValue) {
-                    (_a = this._instance) === null || _a === void 0 ? void 0 : _a.set('defaultDate', this.defaultDate);
+                    this._instance?.set('defaultDate', this.defaultDate);
                     refreshInstance = false;
                 }
                 // TODO: Continue to handle changed properties using set() so not initialised every time updated.
@@ -241,19 +242,17 @@ let LitFlatpickr = class LitFlatpickr extends LitElement {
         }
     }
     checkForSlottedElement() {
-        var _a;
-        const slottedElem = (_a = this.shadowRoot) === null || _a === void 0 ? void 0 : _a.querySelector('slot');
+        const slottedElem = this.shadowRoot?.querySelector('slot');
         // We don't want to think that a whitespace / line break is a node
         const assignedNodes = slottedElem ? slottedElem.assignedNodes().filter(this.removeTextNodes) : [];
         return assignedNodes.length > 0;
     }
     getSlottedElement() {
-        var _a;
         if (!this._hasSlottedElement) {
             return undefined;
         }
-        const slottedElem = (_a = this.shadowRoot) === null || _a === void 0 ? void 0 : _a.querySelector('slot');
-        const slottedElemNodes = slottedElem === null || slottedElem === void 0 ? void 0 : slottedElem.assignedNodes().filter(this.removeTextNodes);
+        const slottedElem = this.shadowRoot?.querySelector('slot');
+        const slottedElemNodes = slottedElem?.assignedNodes().filter(this.removeTextNodes);
         if (!slottedElemNodes || slottedElemNodes.length < 1) {
             return undefined;
         }
@@ -303,15 +302,14 @@ let LitFlatpickr = class LitFlatpickr extends LitElement {
             shorthandCurrentMonth: this.shorthandCurrentMonth,
             showMonths: this.showMonths,
             static: this.static,
-            // eslint-disable-next-line @typescript-eslint/camelcase
             time_24hr: this.time_24hr,
             weekNumbers: this.weekNumbers,
             wrap: this.wrap,
         };
     }
-    /* eslint-disable @typescript-eslint/no-explicit-any */
-    _dispatchHookAsEvent(evtName, selectedDates, currentDateString, instance, data) {
-        /* eslint-enable @typescript-eslint/no-explicit-any */
+    _dispatchHookAsEvent(evtName, selectedDates, currentDateString, instance, 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
+    data) {
         const evt = new CustomEvent(evtName, {
             detail: {
                 selectedDates: selectedDates,
@@ -323,9 +321,8 @@ let LitFlatpickr = class LitFlatpickr extends LitElement {
         this.dispatchEvent(evt);
     }
     async initializeComponent() {
-        var _a;
         if (Object.prototype.hasOwnProperty.call(this, 'destroy')) {
-            (_a = this._instance) === null || _a === void 0 ? void 0 : _a.destroy();
+            this._instance?.destroy();
         }
         await this.updateComplete;
         const inputElement = this.findInputField();
@@ -335,10 +332,9 @@ let LitFlatpickr = class LitFlatpickr extends LitElement {
     }
     /** If lit-flatpickr has a slotted element, it means that the user wants to use their custom input. */
     findInputField() {
-        var _a;
         let inputElement = null;
         if (!this._hasSlottedElement) {
-            return (_a = this.shadowRoot) === null || _a === void 0 ? void 0 : _a.querySelector('input');
+            return this.shadowRoot?.querySelector('input');
         }
         // First we check if the slotted element is just light dom HTML
         inputElement = this.querySelector('input');
@@ -395,75 +391,58 @@ let LitFlatpickr = class LitFlatpickr extends LitElement {
         }
     }
     changeMonth(monthNum, isOffset = true) {
-        var _a;
-        (_a = this._instance) === null || _a === void 0 ? void 0 : _a.changeMonth(monthNum, isOffset);
+        this._instance?.changeMonth(monthNum, isOffset);
     }
     clear() {
-        var _a;
-        (_a = this._instance) === null || _a === void 0 ? void 0 : _a.clear();
+        this._instance?.clear();
     }
     close() {
-        var _a;
-        (_a = this._instance) === null || _a === void 0 ? void 0 : _a.close();
+        this._instance?.close();
     }
     destroy() {
-        var _a;
-        (_a = this._instance) === null || _a === void 0 ? void 0 : _a.destroy();
+        this._instance?.destroy();
     }
     formatDate(dateObj, formatStr) {
-        var _a, _b;
-        return (_b = (_a = this._instance) === null || _a === void 0 ? void 0 : _a.formatDate(dateObj, formatStr)) !== null && _b !== void 0 ? _b : '';
+        return this._instance?.formatDate(dateObj, formatStr) ?? '';
     }
     jumpToDate(date, triggerChange) {
-        var _a;
-        (_a = this._instance) === null || _a === void 0 ? void 0 : _a.jumpToDate(date, triggerChange);
+        this._instance?.jumpToDate(date, triggerChange);
     }
     open() {
-        var _a;
-        (_a = this._instance) === null || _a === void 0 ? void 0 : _a.open();
+        this._instance?.open();
     }
     parseDate(dateStr, dateFormat) {
-        var _a;
-        return (_a = this._instance) === null || _a === void 0 ? void 0 : _a.parseDate(dateStr, dateFormat);
+        return this._instance?.parseDate(dateStr, dateFormat);
     }
     redraw() {
-        var _a;
-        (_a = this._instance) === null || _a === void 0 ? void 0 : _a.redraw();
+        this._instance?.redraw();
     }
     set(option, 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
     value) {
-        var _a;
-        (_a = this._instance) === null || _a === void 0 ? void 0 : _a.set(option, value);
+        this._instance?.set(option, value);
     }
     /** Second and third parameters are optional (as per flatpickr documentation). */
     setDate(date, triggerChange, dateStrFormat) {
-        var _a;
-        (_a = this._instance) === null || _a === void 0 ? void 0 : _a.setDate(date, triggerChange, dateStrFormat);
+        this._instance?.setDate(date, triggerChange, dateStrFormat);
     }
     toggle() {
-        var _a;
-        (_a = this._instance) === null || _a === void 0 ? void 0 : _a.toggle();
+        this._instance?.toggle();
     }
     getSelectedDates() {
-        var _a, _b;
-        return (_b = (_a = this._instance) === null || _a === void 0 ? void 0 : _a.selectedDates) !== null && _b !== void 0 ? _b : [];
+        return this._instance?.selectedDates ?? [];
     }
     getCurrentYear() {
-        var _a, _b;
-        return (_b = (_a = this._instance) === null || _a === void 0 ? void 0 : _a.currentYear) !== null && _b !== void 0 ? _b : -1;
+        return this._instance?.currentYear ?? -1;
     }
     getCurrentMonth() {
-        var _a, _b;
-        return (_b = (_a = this._instance) === null || _a === void 0 ? void 0 : _a.currentMonth) !== null && _b !== void 0 ? _b : -1;
+        return this._instance?.currentMonth ?? -1;
     }
     getConfig() {
-        var _a, _b;
-        return (_b = (_a = this._instance) === null || _a === void 0 ? void 0 : _a.config) !== null && _b !== void 0 ? _b : {};
+        return this._instance?.config ?? {};
     }
     getValue() {
-        var _a, _b;
-        return (_b = (_a = this._instance) === null || _a === void 0 ? void 0 : _a.input.value) !== null && _b !== void 0 ? _b : ''; //Or we could check/use findInputField() instead of _instance.input.
+        return this._instance?.input.value ?? ''; //Or we could check/use findInputField() instead of _instance.input.
     }
     render() {
         return html `

@@ -20,7 +20,7 @@ export default class StyleLoader {
    * We want to prevent the styles from flickering, so we halt the
    * initialization process until the styles have been loaded
    * */
-  waitForStyleToLoad(checkFunction: Function): Promise<void> {
+  waitForStyleToLoad(checkFunction: () => boolean): Promise<void> {
     return new Promise((resolve, reject) => {
       const checkIfStylesHaveLoaded = (iteration = 0) => {
         if (checkFunction()) return resolve();

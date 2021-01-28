@@ -1,4 +1,5 @@
-import { html, LitElement, property, internalProperty, customElement, css } from 'lit-element';
+import { html, LitElement, property, internalProperty, customElement, css, CSSResultArray } from 'lit-element';
+import { TemplateResult } from 'lit-html';
 import 'flatpickr';
 import { FlatpickrTheme } from './styles/Themes';
 import StyleLoader from './StyleLoader';
@@ -312,32 +313,34 @@ export class LitFlatpickr extends LitElement {
 
   _instance?: FlatpickrInstance;
 
-  static get styles() {
-    return css`
-      :host {
-        width: fit-content;
-        display: block;
-        cursor: text;
-        background: #fff;
-        color: #000;
-        overflow: hidden;
-      }
+  static get styles(): CSSResultArray {
+    return [
+      css`
+        :host {
+          width: fit-content;
+          display: block;
+          cursor: text;
+          background: #fff;
+          color: #000;
+          overflow: hidden;
+        }
 
-      input {
-        width: 100%;
-        height: 100%;
-        font-size: inherit;
-        cursor: inherit;
-        background: inherit;
-        box-sizing: border-box;
-        outline: none;
-        color: inherit;
-        border: none;
-      }
-    `;
+        input {
+          width: 100%;
+          height: 100%;
+          font-size: inherit;
+          cursor: inherit;
+          background: inherit;
+          box-sizing: border-box;
+          outline: none;
+          color: inherit;
+          border: none;
+        }
+      `,
+    ];
   }
 
-  firstUpdated() {
+  async firstUpdated(): Promise<void> {
     this._hasSlottedElement = this.checkForSlottedElement();
   }
 
@@ -442,23 +445,20 @@ export class LitFlatpickr extends LitElement {
       shorthandCurrentMonth: this.shorthandCurrentMonth,
       showMonths: this.showMonths,
       static: this.static,
-      // eslint-disable-next-line @typescript-eslint/camelcase
       time_24hr: this.time_24hr,
       weekNumbers: this.weekNumbers,
       wrap: this.wrap,
     };
   }
 
-  /* eslint-disable @typescript-eslint/no-explicit-any */
   _dispatchHookAsEvent(
     evtName: string,
     selectedDates: Date[],
     currentDateString: string,
     instance: FlatpickrInstance,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
     data?: any
   ): void {
-    /* eslint-enable @typescript-eslint/no-explicit-any */
-
     const evt = new CustomEvent(evtName, {
       detail: {
         selectedDates: selectedDates,
@@ -569,7 +569,7 @@ export class LitFlatpickr extends LitElement {
     return this._instance?.formatDate(dateObj, formatStr) ?? '';
   }
 
-  jumpToDate(date: Date, triggerChange: boolean) {
+  jumpToDate(date: Date, triggerChange: boolean): void {
     this._instance?.jumpToDate(date, triggerChange);
   }
 
@@ -591,7 +591,7 @@ export class LitFlatpickr extends LitElement {
       | {
           [k in keyof Options]?: Options[k];
         },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
     value?: any
   ): void {
     this._instance?.set(option, value);
@@ -626,7 +626,7 @@ export class LitFlatpickr extends LitElement {
     return this._instance?.input.value ?? ''; //Or we could check/use findInputField() instead of _instance.input.
   }
 
-  render() {
+  render(): TemplateResult {
     return html`
       ${this._hasSlottedElement ? html`` : html`<input class="lit-flatpickr flatpickr flatpickr-input" />`}
       <slot></slot>

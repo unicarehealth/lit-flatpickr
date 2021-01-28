@@ -2,8 +2,24 @@
   "version": "experimental",
   "tags": [
     {
+      "name": "custom-input",
+      "path": "./demo\\custom-input.js"
+    },
+    {
+      "name": "first-level-input",
+      "path": "./demo\\custom-nested-input.js"
+    },
+    {
+      "name": "second-level-input",
+      "path": "./demo\\custom-nested-input.js"
+    },
+    {
+      "name": "slotted-input",
+      "path": "./demo\\custom-nested-input.js"
+    },
+    {
       "name": "lit-flatpickr",
-      "path": "./lit-flatpickr.ts",
+      "path": "./src\\LitFlatpickr.ts",
       "attributes": [
         {
           "name": "altFormat",
@@ -50,7 +66,7 @@
         {
           "name": "defaultDate",
           "description": "Sets the initial selected date(s).\n\nIf you're using mode: \"multiple\" or a range calendar supply an Array of\nDate objects or an Array of date strings which follow your dateFormat.\n\nOtherwise, you can supply a single Date object or a date string.",
-          "type": "DateOption | DateOption[]"
+          "type": "DateOption|DateOption[]"
         },
         {
           "name": "defaultHour",
@@ -93,11 +109,6 @@
           "description": "Enables seconds in the time picker",
           "type": "boolean",
           "default": "false"
-        },
-        {
-          "name": "formatDateFn",
-          "description": "Allows using a custom date formatting function instead of the built-in\nhandling for date formats using dateFormat, altFormat, etc.\n\nFunction format: (date: Date, format: string, locale: Locale) => string",
-          "type": "((date: Date, format: string, locale: Locale) => string) | undefined"
         },
         {
           "name": "hourIncrement",
@@ -152,41 +163,6 @@
           "default": "false"
         },
         {
-          "name": "onChange",
-          "description": "Function(s) to trigger on every date selection",
-          "type": "Hook | undefined"
-        },
-        {
-          "name": "onClose",
-          "description": "Function(s) to trigger every time the calendar is closed",
-          "type": "Hook | undefined"
-        },
-        {
-          "name": "onOpen",
-          "description": "Function(s) to trigger every time the calendar is opened",
-          "type": "Hook | undefined"
-        },
-        {
-          "name": "onReady",
-          "description": "Function(s) to trigger when the calendar is ready",
-          "type": "Hook | undefined"
-        },
-        {
-          "name": "onMonthChange",
-          "description": "Function(s) to trigger every time the calendar month is changed by the user or programmatically",
-          "type": "Hook | undefined"
-        },
-        {
-          "name": "onYearChange",
-          "description": "Function(s) to trigger every time the calendar year is changed by the user or programmatically",
-          "type": "Hook | undefined"
-        },
-        {
-          "name": "onValueUpdate",
-          "description": "Function(s) to trigger when the input value is updated with a new date string",
-          "type": "Hook | undefined"
-        },
-        {
           "name": "parseDateFn",
           "description": "Function that expects a date string and must return a Date object.\n\nFunction format: (date: string, format: string) => string",
           "type": "((date: string, format: string) => Date) | undefined"
@@ -236,7 +212,7 @@
         {
           "name": "theme",
           "description": "The set theme of flatpickr.",
-          "type": " \"light\" | \"dark\" | \"material_blue\" | \"material_red\" | \"material_green\" | \"material_orange\" | \"airbnb\" | \"confetti\" ",
+          "type": " \"light\" | \"dark\" | \"material_blue\" | \"material_red\" | \"material_green\" | \"material_orange\" | \"airbnb\" | \"confetti\" ",
           "default": "\"light\""
         }
       ],
@@ -294,7 +270,7 @@
           "name": "defaultDate",
           "attribute": "defaultDate",
           "description": "Sets the initial selected date(s).\n\nIf you're using mode: \"multiple\" or a range calendar supply an Array of\nDate objects or an Array of date strings which follow your dateFormat.\n\nOtherwise, you can supply a single Date object or a date string.",
-          "type": "DateOption | DateOption[]"
+          "type": "DateOption|DateOption[]"
         },
         {
           "name": "defaultHour",
@@ -347,7 +323,6 @@
         },
         {
           "name": "formatDateFn",
-          "attribute": "formatDateFn",
           "description": "Allows using a custom date formatting function instead of the built-in\nhandling for date formats using dateFormat, altFormat, etc.\n\nFunction format: (date: Date, format: string, locale: Locale) => string",
           "type": "((date: Date, format: string, locale: Locale) => string) | undefined"
         },
@@ -413,48 +388,6 @@
           "default": "false"
         },
         {
-          "name": "onChange",
-          "attribute": "onChange",
-          "description": "Function(s) to trigger on every date selection",
-          "type": "Hook | undefined"
-        },
-        {
-          "name": "onClose",
-          "attribute": "onClose",
-          "description": "Function(s) to trigger every time the calendar is closed",
-          "type": "Hook | undefined"
-        },
-        {
-          "name": "onOpen",
-          "attribute": "onOpen",
-          "description": "Function(s) to trigger every time the calendar is opened",
-          "type": "Hook | undefined"
-        },
-        {
-          "name": "onReady",
-          "attribute": "onReady",
-          "description": "Function(s) to trigger when the calendar is ready",
-          "type": "Hook | undefined"
-        },
-        {
-          "name": "onMonthChange",
-          "attribute": "onMonthChange",
-          "description": "Function(s) to trigger every time the calendar month is changed by the user or programmatically",
-          "type": "Hook | undefined"
-        },
-        {
-          "name": "onYearChange",
-          "attribute": "onYearChange",
-          "description": "Function(s) to trigger every time the calendar year is changed by the user or programmatically",
-          "type": "Hook | undefined"
-        },
-        {
-          "name": "onValueUpdate",
-          "attribute": "onValueUpdate",
-          "description": "Function(s) to trigger when the input value is updated with a new date string",
-          "type": "Hook | undefined"
-        },
-        {
           "name": "parseDateFn",
           "attribute": "parseDateFn",
           "description": "Function that expects a date string and must return a Date object.\n\nFunction format: (date: string, format: string) => string",
@@ -513,14 +446,10 @@
           "name": "theme",
           "attribute": "theme",
           "description": "The set theme of flatpickr.",
-          "type": " \"light\" | \"dark\" | \"material_blue\" | \"material_red\" | \"material_green\" | \"material_orange\" | \"airbnb\" | \"confetti\" ",
+          "type": " \"light\" | \"dark\" | \"material_blue\" | \"material_red\" | \"material_green\" | \"material_orange\" | \"airbnb\" | \"confetti\" ",
           "default": "\"light\""
         }
       ]
-    },
-    {
-      "name": "lit-flatpickr",
-      "path": "./dist/lit-flatpickr.js"
     }
   ]
 }
