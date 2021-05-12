@@ -1,5 +1,5 @@
-import { html, LitElement, property, internalProperty, customElement, css, CSSResultArray } from 'lit-element';
-import { TemplateResult } from 'lit-html';
+import { html, LitElement, TemplateResult, css, CSSResultArray } from 'lit';
+import { customElement, property, state } from 'lit/decorators';
 import 'flatpickr';
 import { FlatpickrTheme } from './styles/Themes';
 import StyleLoader from './StyleLoader';
@@ -306,7 +306,7 @@ export class LitFlatpickr extends LitElement {
     | 'airbnb'
     | 'confetti' = 'light';
 
-  @internalProperty()
+  @state()
   _hasSlottedElement = false;
 
   _styleInitialized = false;

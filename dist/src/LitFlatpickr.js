@@ -1,5 +1,6 @@
 import { __decorate } from "tslib";
-import { html, LitElement, property, internalProperty, customElement, css } from 'lit-element';
+import { html, LitElement, css } from 'lit';
+import { customElement, property, state } from 'lit/decorators';
 import 'flatpickr';
 import StyleLoader from './StyleLoader';
 let LitFlatpickr = class LitFlatpickr extends LitElement {
@@ -554,7 +555,7 @@ __decorate([
     property({ type: String })
 ], LitFlatpickr.prototype, "theme", void 0);
 __decorate([
-    internalProperty()
+    state()
 ], LitFlatpickr.prototype, "_hasSlottedElement", void 0);
 LitFlatpickr = __decorate([
     customElement('lit-flatpickr')

@@ -1,5 +1,4 @@
-import { LitElement, CSSResultArray } from 'lit-element';
-import { TemplateResult } from 'lit-html';
+import { LitElement, TemplateResult, CSSResultArray } from 'lit';
 import 'flatpickr';
 import { DateLimit, DateOption, Options, ParsedOptions } from 'flatpickr/dist/types/options';
 import { Locale } from 'flatpickr/dist/types/locale';
