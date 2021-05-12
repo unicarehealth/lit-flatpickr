@@ -1,5 +1,5 @@
 import { html, LitElement, TemplateResult, css, CSSResultArray } from 'lit';
-import { customElement, property, state } from 'lit/decorators';
+import { customElement, property, state } from 'lit/decorators.js';
 import 'flatpickr';
 import { FlatpickrTheme } from './styles/Themes';
 import StyleLoader from './StyleLoader';
